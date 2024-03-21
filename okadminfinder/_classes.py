@@ -81,12 +81,12 @@ class okadminfinder:
         if url.host[0:4] == "www.":
             website = url.host.replace("www.", "")
             for n in okadminfinder.get_links():
-                req_link = url.scheme + "://" + n.format(website) + "/" 
+                req_link = url.scheme + "://" + n.format(website)
                 reqlinks.append(req_link.replace("\n", ""))
         else:
             website = url.host
             for n in okadminfinder.get_links():
-                req_link = url.scheme + "://" + n.format(website) + "/"
+                req_link = url.scheme + "://" + n.format(website)
                 reqlinks.append(req_link.replace("\n", ""))
         return reqlinks
 
@@ -171,21 +171,16 @@ class okadminfinder:
                     pbar.update()
                     try:
                         response = await client.get(url)
-                        if (response.status_code == httpx.codes.OK or response.status_code == httpx.codes.FOUND):
-                            if (response.status_code == httpx.codes.FOUND):
+                        if (response.status_code == httpx.codes.OK):
+                            tqdm.write(f"{green} ҂ Found {response.status_code}: {cyan} {url} {RESET_ALL} {NORMAL} {str(len(response.content))} bytes {RESET_ALL} \n")  # noqa: E501
+                            admin_count += 1
+                        elif (response.status_code == httpx.codes.FOUND or response.status_code == httpx.codes.MOVED_PERMANENTLY):
                                 redir = httpx.get(url, follow_redirects=True)
                                 tamano = len(redir.content)
                                 redirected_url = redir.url
-                                tqdm.write(f"{green} ҂ Found {response.status_code}: {cyan} {url} {RESET_ALL} {green} {redirected_url} {RESET_ALL} {NORMAL} {str(tamano)} bytes {RESET_ALL} \n")  # noqa: E501
+                                tqdm.write(f"{green} ҂ Redirect Found {response.status_code}: {cyan} {url} {RESET_ALL} >> {green} {redirected_url} {RESET_ALL} {NORMAL} {str(tamano)} bytes {RESET_ALL} \n")  # noqa: E501
                                 admin_count += 1
-                            else:
-
-                                r = httpx.get(url)
-                                tamano = len(r.content)
-                                tqdm.write(
-                                    f"{green} ҂ Found {response.status_code}: {cyan} {url} {RESET_ALL} {NORMAL} {str(tamano)} bytes {RESET_ALL} \n"
-                                )  # noqa: E501
-                                admin_count += 1
+                            
                         else:
                             continue
                 pbar.close()
