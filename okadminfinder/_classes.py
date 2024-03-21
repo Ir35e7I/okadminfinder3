@@ -171,12 +171,11 @@ class okadminfinder:
                     pbar.update()
                     try:
                         response = await client.get(url)
-                        if (
-                            response.status_code == httpx.codes.OK
-                            or response.status_code == httpx.codes.MOVED_PERMANENTLY
-                        ):
+                        if (response.status_code == httpx.codes.OK or response.status_code == httpx.codes.MOVED_PERMANENTLY):
+                            r = httpx.get(url)
+                            tamano = len(r.content)
                             tqdm.write(
-                                f"{green} ҂ Found: {cyan} {url} {RESET_ALL} \n"
+                                f"{green} ҂ Found: {cyan} {url} {RESET_ALL} {NORMAL} {str(tamano)} bytes {RESET_ALL} \n"
                             )  # noqa: E501
                             admin_count += 1
                         else:
