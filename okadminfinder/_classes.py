@@ -170,20 +170,24 @@ class okadminfinder:
                 for url in urls:
                     pbar.update()
                     try:
-                        response = await client.get(url, follow_redirects=True)
+                        response = await client.get(url)
                         if (response.status_code == httpx.codes.OK or response.status_code == httpx.codes.FOUND):
-                            t = len(response.content)
-                            tqdm.write(f"{green} ҂ Found {response.status_code}: {cyan} {url} {RESET_ALL} {NORMAL} {str(t)} bytes {RESET_ALL} \n")  # noqa: E501
-                            admin_count += 1
+                            if (response.status_code == httpx.codes.FOUND):
+                                redir = httpx.get(url, follow_redirects=True)
+                                tamano = len(redir.content)
+                                redirected_url = redir.url
+                                tqdm.write(f"{green} ҂ Found {response.status_code}: {cyan} {url} {RESET_ALL} {green} {redirected_url} {RESET_ALL} {NORMAL} {str(tamano)} bytes {RESET_ALL} \n")  # noqa: E501
+                                admin_count += 1
+                            else:
+
+                                r = httpx.get(url)
+                                tamano = len(r.content)
+                                tqdm.write(
+                                    f"{green} ҂ Found {response.status_code}: {cyan} {url} {RESET_ALL} {NORMAL} {str(tamano)} bytes {RESET_ALL} \n"
+                                )  # noqa: E501
+                                admin_count += 1
                         else:
                             continue
-                    except (
-                        httpx.NetworkError,
-                        httpx.ReadTimeout,
-                        httpx.ConnectTimeout,
-                        httpx.ProxyError,
-                    ):
-                        continue
                 pbar.close()
             print("\n\n\t╔═══[✔️]", green, BOLD, " Completed", RESET_ALL)
             print("\t╟───╸📑️", str(admin_count), "Admin pages found")
