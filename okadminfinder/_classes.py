@@ -81,12 +81,12 @@ class okadminfinder:
         if url.host[0:4] == "www.":
             website = url.host.replace("www.", "")
             for n in okadminfinder.get_links():
-                req_link = url.scheme + "://" + n.format(website)
+                req_link = url.scheme + "://" + n.format(website) + "/" 
                 reqlinks.append(req_link.replace("\n", ""))
         else:
             website = url.host
             for n in okadminfinder.get_links():
-                req_link = url.scheme + "://" + n.format(website)
+                req_link = url.scheme + "://" + n.format(website) + "/"
                 reqlinks.append(req_link.replace("\n", ""))
         return reqlinks
 
