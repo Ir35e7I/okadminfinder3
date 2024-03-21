@@ -178,11 +178,18 @@ class okadminfinder:
                                 redir = httpx.get(url, follow_redirects=True)
                                 tamano = len(redir.content)
                                 redirected_url = redir.url
-                                tqdm.write(f"{green} ҂ Redirect Found {response.status_code}: {cyan} {url} {RESET_ALL} >> {green} {redirected_url} {RESET_ALL} {NORMAL} {str(tamano)} bytes {RESET_ALL} \n")  # noqa: E501
+                                tqdm.write(f"{green} ҂ Redirect Found {response.status_code}: {cyan} {url} {RESET_ALL} {NORMAL} {str(len(response.content))} bytes {RESET_ALL}{red} >> {RESET_ALL} {green} {redirected_url} {RESET_ALL} {NORMAL} {str(tamano)} bytes {RESET_ALL} \n")  # noqa: E501
                                 admin_count += 1
                             
                         else:
                             continue
+                    except (
+                        httpx.NetworkError,
+                        httpx.ReadTimeout,
+                        httpx.ConnectTimeout,
+                        httpx.ProxyError,
+                    ):
+                        continue
                 pbar.close()
             print("\n\n\t╔═══[✔️]", green, BOLD, " Completed", RESET_ALL)
             print("\t╟───╸📑️", str(admin_count), "Admin pages found")
