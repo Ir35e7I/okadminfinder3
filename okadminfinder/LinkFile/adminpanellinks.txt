@@ -8,6 +8,7 @@ admin3.{}
 admin4.{}
 moderator.{}
 webadmin.{}
+sistemadeautogestion.{}
 user.{}
 personal.{}
 {}/loginreg.php
